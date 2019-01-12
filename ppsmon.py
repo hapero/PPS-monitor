@@ -83,6 +83,10 @@ def format_telegram(t):
     r += '(T=%s)' % get_temp(t)
     return r
 
+def valid_temp(t):
+    """Return true if the telegram's temperature is valid"""
+    return not (t[6] == 0x80 and t[7] == 0x01)
+
 def decode_telegram(t):
     """Decode the passed telegram into a message and its formatted and
     raw value.
@@ -102,10 +106,12 @@ def decode_telegram(t):
         return ('Actual room temp', get_temp(t), get_raw_temp(t))
     elif t[1] == 0x29:
         return ('Outside temp', get_temp(t), get_raw_temp(t))
-    elif t[1] == 0x2c:
+    elif t[1] == 0x2c and  valid_temp(t):
         return ('Actual flow temp', get_temp(t), get_raw_temp(t))
     elif t[1] == 0x2b:
         return ('Actual DHW temp', get_temp(t), get_raw_temp(t))
+    elif t[1] == 0x2e and  valid_temp(t):
+        return ('Actual boiler temp', get_temp(t), get_raw_temp(t))
     elif t[1] == 0x48:
         return ('Authority', ('remote' if t[7] == 0 else 'controller'), t[7])
     elif t[1] == 0x49:
