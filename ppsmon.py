@@ -230,9 +230,15 @@ def netdata_set_values(r, dt):
     print('SET t_dhw_actual = %d' % r['Actual DHW temp'])
     print('END')
 
-    print('BEGIN Heating.flow %d' % dt)
-    print('SET t_heating = %d' % r['Actual flow temp'])
-    print('END')
+    if r['Actual flow temp']:
+        print('BEGIN Heating.flow %d' % dt)
+        print('SET t_heating = %d' % r['Actual flow temp'])
+        print('END')
+
+    if r['Actual boiler temp']:
+        print('BEGIN Heating.boiler %d' % dt)
+        print('SET t_boiler = %d' % r['Actual boiler temp'])
+        print('END')
 
     print('BEGIN Heating.set_point %d' % dt)
     print('SET t_present = %d' % r['Set present room temp'])
